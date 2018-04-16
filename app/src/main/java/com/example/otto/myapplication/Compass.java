@@ -1,14 +1,17 @@
 package com.example.otto.myapplication;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.ContextThemeWrapper;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,12 +31,13 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
     private float[] mLastMagnetometer = new float[3];
     private boolean mLastAccelerometerSet = false;
     private boolean mLastMagnetometerSet = false;
+    private Vibrator v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compass);
-
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         compass_img = findViewById(R.id.img_compass);
         txt_compass = findViewById(R.id.txt_azimuth);
@@ -65,9 +69,10 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
         compass_img.setRotation(-mAzimuth);
 
         String where = "NW";
-
-        if (mAzimuth >= 350 || mAzimuth <= 10)
+        if (mAzimuth >= 350 || mAzimuth <= 10) {
             where = "N";
+            vibrate();
+        }
         if (mAzimuth < 350 && mAzimuth > 280)
             where = "NW";
         if (mAzimuth <= 280 && mAzimuth > 260)
@@ -130,6 +135,10 @@ public class Compass extends AppCompatActivity implements SensorEventListener {
             mSensorManager.unregisterListener(this, mAccelerometer);
             mSensorManager.unregisterListener(this, mMagnetometer);
         }
+    }
+
+    private void vibrate() {
+        v.vibrate(50);
     }
 
     @Override

@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">MAMN01</string>
+    <string name="coordinate">%1$s: %2$s</string>
 </resources>
